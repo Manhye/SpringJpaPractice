@@ -4,6 +4,7 @@ import com.example.springjpapractice.dto.MemberResponseDto;
 import com.example.springjpapractice.dto.SignUpResponseDto;
 import com.example.springjpapractice.entity.Member;
 import com.example.springjpapractice.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,20 @@ public class MemberService {
 
         Member findMember = optionalMember.get();
         return new MemberResponseDto(findMember.getUsername(),findMember.getAge());
+
+    }
+
+    @Transactional
+    public void updatePassword(Long id, String oldPassword, String newPassword) {
+
+        Member findMember = memberRepository.findByIdOrElseThrow(id);
+
+        if(!findMember.getPassword().equals(oldPassword)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
+        }
+
+        findMember.updatePassword(newPassword);
+        // It updates DB automatically when the transaction finishes.
 
     }
 }

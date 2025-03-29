@@ -3,6 +3,7 @@ package com.example.springjpapractice.controller;
 import com.example.springjpapractice.dto.MemberResponseDto;
 import com.example.springjpapractice.dto.SignUpRequestDto;
 import com.example.springjpapractice.dto.SignUpResponseDto;
+import com.example.springjpapractice.dto.UpdatePasswordRequestDto;
 import com.example.springjpapractice.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,14 @@ public class MemberController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> updatePassword(@PathVariable Long id, @RequestBody MemberResponseDto requestDto) {
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long id,
+            @RequestBody UpdatePasswordRequestDto requestDto
+    ) {
 
+        memberService.updatePassword(id, requestDto.getOldPassword(), requestDto.getNewPassword());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
